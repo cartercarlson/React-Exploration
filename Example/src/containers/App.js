@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from '../images/logo.svg';
 import './App.css';
-import { MyFirstChildComp } from "./MyFirstChildComp.js";
+import { MyFirstChildComp } from "../components/MyFirstChildComp";
 
 
 class App extends Component {
