@@ -1,12 +1,7 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import HelloWorld from './HelloWorld';
+import MySecondComponent from './MySecondComponent';
 
-class HelloWorld extends React.Component {
-  render() {
-    return (
-      <div>Hello World!</div>
-    )
-  }
-}
-
-ReactDOM.render(<HelloWorld />, document.getElementById('root'));
+ReactDOM.render(<HelloWorld />, document.getElementById('comp1'));
+ReactDOM.render(<MySecondComponent />, document.getElementById('comp2'));
