@@ -1,3 +1,9 @@
+import React from "react";
+import { Container, Text } from "native-base";
+import { Grid, Row } from "react-native-easy-grid";
+import { AppLoading, Constants } from "expo";
+
+
 class ResultScreen extends Component {
 
 	static navigationOptions = {
@@ -22,3 +28,5 @@ class ResultScreen extends Component {
 	}
 
 }
+
+export default ResultScreen;

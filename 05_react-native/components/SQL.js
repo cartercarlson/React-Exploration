@@ -1,7 +1,7 @@
 import { SQLite } from "expo";
 
-const tableName = "qrcodes";
-const db = SQLite.openDatabase("qrcodes");
+const tableName = "qr";
+const db = SQLite.openDatabase("qr");
 
 export default class SQL {
 
@@ -13,7 +13,7 @@ export default class SQL {
 		});
 	}
 
-	static AddQRCode = text => {
+	static AddQR = text => {
 		db.transaction(
 			tx => {
 				tx.executeSql(`insert into ${tableName} (value, date) values (?,?)` [
@@ -24,7 +24,7 @@ export default class SQL {
 		);
 	}
 
-	static GetQRCodes = () => {
+	static GetQRs = () => {
 		return new Promise((resolve, reject) => {
 			db.transaction(async tx => {
 				await tx.executeSql(
