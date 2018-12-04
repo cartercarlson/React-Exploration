@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Text } from "native-base";
 import { Grid, Row } from "react-native-easy-grid";
-import { AppLoading, Constants } from "expo";
+import { Constants } from "expo";
 
 
 class ResultScreen extends Component {
@@ -11,6 +11,7 @@ class ResultScreen extends Component {
 	}
 
 	render() {
+		const qr = this.props.navigation.getParam("qr", "NO-QR");
 		return (
 			<Container style={{ marginTop: Constants.statusBarHeight }}>
 				<Grid
@@ -19,11 +20,10 @@ class ResultScreen extends Component {
 					}}
 				>
 					<Row>
-						<Text>Result Screen</Text>
+						<Text>{qr}</Text>
 					</Row>
 				</Grid>
-
-			</Container
+			</Container>
 		);
 	}
 

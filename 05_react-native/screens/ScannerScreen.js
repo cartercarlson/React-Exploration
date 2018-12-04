@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import { TextInput } from "react-native";
-import { Container, Text, Button } from "native-base";
-import { Grid, Row, Col } from "react-native-easy-grid";
-import { AppLoading, Constants } from "expo";
+import { Dimensions, StyleSheet } from "react-native";
+import { Container, Text, Button, Footer } from "native-base";
+import { Grid, Row } from "react-native-easy-grid";
+import { withNavigationFocus } from "react-navigation";
+
+import { BarCodeScanner, Permissions } from "expo";
+
 import SQL from "../components/SQL";
 
 
@@ -12,48 +15,71 @@ class ScannerScreen extends Component {
 		header: null
 	};
 
+	state = {
+		hasCameraPermission: null
+	};
+
+	async componentDidMount() {
+		// ask for camera permission
+		const { status } = await Permissions.askAsync(Permissions.CAMERA);
+		this.setState({ hasCameraPermission: status === "granted" });
+	}
+
 	saveToDB = qr => {
 		SQL.AddQRCode(qr);
 	};
 
+	handleBarCodeScanned = ({ type, data }) => {
+		this.saveToDB(data);
+		// change screen to Result and pass scanned qr
+		this.props.navigation.navigate("Result", {
+			qr: data
+		});
+	};
+
 	render() {
-		return (
-			<Container style={{ marginTop: Constants.statusBarHeight }}>
-				<Grid
-					style={{
-						alignItems: "center"
-					}}
-				>
-					<Row>
-						<Text>Scanner Screen</Text>
-					</Row>
-					<Row>
-						<TextInput
-							placeholder="Type here to the qr..."
-							onChangeText={qr => this.setState({ qr })}
-						/>
-					</Row>
-					<Row>
-						<Button
-							onPress={() => {
-								this.saveToDB(this.state.qr);
-							}}
-						>
-							<Text>Add to database</Text>
-						</Button>
-					</Row>
-					<Row>
-						<Button onPress={() => this.props.navigation.navigate("History")}>
-							<Text>History</Text>
-						</Button>
-						<Button onPress={() => this.props.navigation.navigate("History")}>
-							<Text>Result</Text>
-						</Button>
-					</Row>
-				</Grid>
-			</Container>
-		);
+		const { hasCameraPermission } == this.state;
+		if (hasCameraPermission === null) {
+			return <Text>Requesting for camera permission</Text>
+		}
+		if (hasCameraPermission === false) {
+			return <Text>Unable to access camera</Text>
+		}
+		if (this.props.isFocused) {
+
+			return (
+				<Container>
+					<BarCodeScanner
+						onBarCodeScanned={this.handleBarCodeScanned}
+						style={styles.BarCodeScanner}
+					>
+						<Footer style={styles.layerBottom}>
+							<Grid>
+								<Row style={styles.layerBottomRow}>
+									<Button onPress={() => this.props.navigation.navigate("History")}>
+										<Text>History</Text>
+									</Button>
+								</Row>
+							</Grid>
+						</Footer>
+					</BarCodeScanner>
+			);
+		}
 	}
+
+	const styles = StyleSheet.create({
+		BarCodeScanner: {
+			height: Dimensions.get("window").height,
+			width: Dimensions.get("window").width,
+			flex: 1,
+			justifyContent: "flex-end"
+		},
+		layerBottom: { backgroundColor: "transparent" },
+		layerBottomRow: {
+			justifyContent: "center",
+			marginHorizontal: 50
+		}
+	});
 
 }
 
